@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>查询结果：未找到 | 世界环境保护组织</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Noto+Serif+SC:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #004d40;
+            --accent-color: #64ffda;
+            --error-color: #ff5252;
+            --error-glow: rgba(255, 82, 82, 0.3);
+            --glass-bg: rgba(20, 30, 28, 0.6);
+            --text-main: #ffffff;
+            --text-sub: #b2dfdb;
+            --font-main: 'Helvetica Neue', 'PingFang SC', sans-serif;
+            --font-serif: 'Playfair Display', 'Noto Serif SC', serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-main);
+            background-color: #0f1c1a;
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(153,61%,25%,1) 0, transparent 50%), 
+                radial-gradient(at 100% 100%, hsla(186,64%,20%,1) 0, transparent 50%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-main);
+            position: relative;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        /* 背景粒子 */
+        .bg-particles {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2364ffda' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        /* 错误提示卡片 */
+        .error-card {
+            width: 100%;
+            max-width: 480px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 82, 82, 0.2); 
+            border-radius: 24px;
+            padding: 4rem 2rem;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            position: relative;
+            animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        /* 红色光晕呼吸效果 */
+        .error-card::before {
+            content: '';
+            position: absolute;
+            top: -2px; left: -2px; right: -2px; bottom: -2px;
+            border-radius: 26px;
+            z-index: -1;
+            background: linear-gradient(45deg, transparent, var(--error-glow), transparent);
+            animation: borderGlow 3s infinite linear;
+            opacity: 0.5;
+        }
+
+        @keyframes borderGlow {
+            0% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+            100% { opacity: 0.3; }
+        }
+
+        /* 图标区域 */
+        .icon-wrapper {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 2rem;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 脉冲圈 */
+        .pulse-circle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid var(--error-color);
+            opacity: 0;
+            animation: pulse 2s infinite;
+        }
+
+        .pulse-circle:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.8); opacity: 0.8; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        /* 警告图标 SVG */
+        .icon-svg {
+            width: 60px;
+            height: 60px;
+            color: var(--error-color);
+            z-index: 2;
+            filter: drop-shadow(0 0 10px var(--error-glow));
+        }
+
+        /* 文本内容 */
+        h1 {
+            font-family: var(--font-serif);
+            font-size: 2rem;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+        }
+
+        .sub-title {
+            color: var(--error-color);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 2rem;
+            font-weight: bold;
+        }
+
+        .error-desc {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: var(--text-sub);
+            margin-bottom: 3rem;
+            padding: 0 1rem;
+        }
+
+        /* 按钮 */
+        .btn-retry {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 40px;
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            letter-spacing: 2px;
+        }
+
+        .btn-retry:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .btn-retry svg {
+            transition: transform 0.5s ease;
+        }
+        
+        .btn-retry:hover svg {
+            transform: rotate(-180deg);
+        }
+
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 480px) {
+            .error-card {
+                padding: 3rem 1.5rem;
+                width: 95%;
+            }
+            h1 { font-size: 1.6rem; }
+            .error-desc { font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="bg-particles"></div>
+
+    <div class="error-card">
+        <div class="icon-wrapper">
+            <div class="pulse-circle"></div>
+            <div class="pulse-circle"></div>
+            <!-- 警告 SVG -->
+            <svg class="icon-svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>
+        </div>
+
+        <h1>未找到该证书</h1>
+        <div class="sub-title">No Certificate Found</div>
+
+        <p class="error-desc">
+            系统无法检索到相关的证书信息。
+            <br><br>
+            这可能是因为输入有误，或者该证书编号系<strong>伪造/未授权</strong>。请核对后重新尝试。
+            <br><br>
+            <em style="font-size:0.8em; opacity:0.7">The certificate information does not exist in our global database. Please verify your input or the authenticity of the certificate.</em>
+        </p>
+
+        <a href="index.html" class="btn-retry">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            重新查询 RETRY
+        </a>
+    </div>
+
+</body>
+</html>
