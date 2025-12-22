@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<!-- SEO & 分享配置 -->
+	<meta property="og:title" content="世界环境保护组织 - 荣誉证书公示">
+	<meta property="og:description" content="点击查看证书详情及认证信息。">
+	<meta property="og:image" content="https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEBGgZoupS08tmL4sCb3NLCDl0z9vLmgQACXCEAAi5q2VU7eyZzJwjEpDYE.jpeg">
+	
+	<title>证书公示 | 世界环境保护组织</title>
+	<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Noto+Serif+SC:wght@700&display=swap" rel="stylesheet">
+	
+	<style>
+		:root {
+			/* 屏幕显示配色 (暗色系) */
+			--primary-color: #004d40;
+			--accent-color: #64ffda;
+			--gold-color: #ffd700;
+			--glass-bg: rgba(20, 30, 28, 0.6);
+			--glass-border: rgba(100, 255, 218, 0.3);
+			--text-main: #ffffff;
+			--text-sub: #b2dfdb;
+			--font-main: 'Helvetica Neue', 'PingFang SC', sans-serif;
+			--font-serif: 'Playfair Display', 'Noto Serif SC', serif;
+		}
+
+		* { margin: 0; padding: 0; box-sizing: border-box; }
+
+		body {
+			font-family: var(--font-main);
+			background-color: #0f1c1a;
+			background-image: 
+				radial-gradient(at 0% 0%, hsla(153,61%,25%,1) 0, transparent 50%), 
+				radial-gradient(at 100% 100%, hsla(186,64%,20%,1) 0, transparent 50%);
+			min-height: 100vh;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			color: var(--text-main);
+			position: relative;
+			padding: 20px;
+		}
+
+		/* 背景粒子 */
+		.bg-particles {
+			position: absolute;
+			top: 0; left: 0; width: 100%; height: 100%;
+			background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2364ffda' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+			z-index: -1;
+			pointer-events: none;
+		}
+
+		/* 顶部导航区 */
+		.nav-header {
+			width: 100%;
+			max-width: 1000px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 20px 0;
+			margin-bottom: 20px;
+			z-index: 10;
+		}
+
+		.back-btn {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			color: var(--text-sub);
+			text-decoration: none;
+			font-size: 0.9rem;
+			transition: 0.3s;
+			padding: 8px 16px;
+			border-radius: 20px;
+			background: rgba(255,255,255,0.05);
+		}
+
+		.back-btn:hover {
+			background: rgba(255,255,255,0.1);
+			color: var(--accent-color);
+		}
+
+		/* 证书容器 - 已移除 perspective */
+		.cert-wrapper {
+			width: 100%;
+			max-width: 900px;
+			display: flex;
+			justify-content: center;
+			margin: auto 0;
+		}
+
+		/* 证书卡片主体 - 已移除 transform/animation */
+		.certificate-card {
+			position: relative;
+			width: 100%;
+			background: var(--glass-bg);
+			backdrop-filter: blur(25px);
+			-webkit-backdrop-filter: blur(25px);
+			border: 1px solid var(--glass-border);
+			border-radius: 20px;
+			padding: 60px;
+			box-shadow: 
+				0 25px 50px -12px rgba(0, 0, 0, 0.5),
+				0 0 30px rgba(100, 255, 218, 0.1);
+			overflow: hidden;
+			/* 保持静态 */
+			transform: none; 
+		}
+
+		/* 顶部装饰条 */
+		.certificate-card::after {
+			content: '';
+			position: absolute;
+			top: 0; left: 0; right: 0;
+			height: 4px;
+			background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+		}
+
+		/* 证书内容布局 */
+		.cert-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: flex-start;
+			margin-bottom: 40px;
+			border-bottom: 1px solid rgba(255,255,255,0.1);
+			padding-bottom: 20px;
+		}
+
+		.org-info h1 {
+			font-size: 1.8rem;
+			font-weight: 500;
+			letter-spacing: 2px;
+			color: var(--text-main);
+		}
+		.org-info h2 {
+			font-size: 0.8rem;
+			color: var(--text-sub);
+			letter-spacing: 1px;
+			margin-top: 5px;
+			text-transform: uppercase;
+		}
+
+		.cert-logo {
+			width: 80px;
+			height: 80px;
+			border-radius: 50%;
+			border: 2px solid rgba(255,255,255,0.1);
+			padding: 2px;
+		}
+		.cert-logo img {
+			width: 100%;
+			height: 100%;
+			border-radius: 50%;
+			object-fit: cover;
+		}
+
+		.cert-body {
+			text-align: center;
+			position: relative;
+			z-index: 2;
+		}
+
+		.cert-title {
+			font-family: var(--font-serif);
+			font-size: 3rem;
+			background: linear-gradient(to right, #fff, var(--accent-color));
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			margin-bottom: 30px;
+			letter-spacing: 2px;
+		}
+
+		.award-to {
+			font-size: 1rem;
+			color: var(--text-sub);
+			margin-bottom: 15px;
+			text-transform: uppercase;
+			letter-spacing: 3px;
+		}
+
+		.recipient-name {
+			font-family: var(--font-serif);
+			font-size: 3.5rem;
+			color: var(--gold-color);
+			margin-bottom: 30px;
+			text-shadow: 0 5px 15px rgba(0,0,0,0.3);
+			border-bottom: 1px solid rgba(255,255,255,0.1);
+			display: inline-block;
+			padding: 0 40px 10px 40px;
+			min-width: 300px;
+		}
+
+		.cert-desc {
+			font-size: 1.1rem;
+			line-height: 1.8;
+			color: rgba(255,255,255,0.9);
+			max-width: 80%;
+			margin: 0 auto 50px;
+		}
+
+		.cert-footer {
+			display: flex;
+			justify-content: space-between;
+			align-items: flex-end;
+			margin-top: 40px;
+			text-align: left;
+		}
+
+		.cert-meta .meta-item { margin-bottom: 10px; }
+		.meta-label { color: var(--text-sub); font-size: 0.8rem; display: block; margin-bottom: 2px; }
+		.meta-value { color: var(--accent-color); font-family: monospace; font-size: 1.1rem; letter-spacing: 1px; }
+
+		/* 底部操作栏 */
+		.action-bar {
+			margin-top: 40px;
+			display: flex;
+			gap: 20px;
+			z-index: 10;
+		}
+
+		.action-btn {
+			padding: 12px 30px;
+			border-radius: 50px;
+			border: 1px solid var(--accent-color);
+			background: rgba(0, 77, 64, 0.3);
+			color: var(--accent-color);
+			cursor: pointer;
+			font-size: 0.9rem;
+			letter-spacing: 1px;
+			transition: all 0.3s ease;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+
+		.action-btn:hover {
+			background: var(--accent-color);
+			color: #000;
+		}
+
+		.action-btn.primary {
+			background: var(--accent-color);
+			color: #0f1c1a;
+			font-weight: bold;
+		}
+
+		/* 提示框 */
+		.toast {
+			position: fixed;
+			bottom: 30px;
+			left: 50%;
+			transform: translateX(-50%) translateY(100px);
+			background: #fff;
+			color: #000;
+			padding: 12px 24px;
+			border-radius: 50px;
+			box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+			opacity: 0;
+			transition: all 0.3s;
+			z-index: 1000;
+		}
+		.toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+		/* =========================================
+		   移动端适配 
+		   ========================================= */
+		@media (max-width: 768px) {
+			.certificate-card { padding: 30px 20px; }
+			.cert-header { flex-direction: column-reverse; align-items: center; text-align: center; gap: 20px; }
+			.cert-title { font-size: 2rem; }
+			.recipient-name { font-size: 2rem; padding: 0 10px 5px; width: 100%; min-width: auto; }
+			.cert-desc { max-width: 100%; font-size: 0.95rem; }
+			.cert-footer { flex-direction: column; align-items: center; gap: 30px; text-align: center; }
+			.action-bar { flex-direction: column; width: 100%; }
+			.action-btn { width: 100%; justify-content: center; }
+		}
+
+		/* =========================================
+		   打印专用样式 (严格模式)
+		   ========================================= */
+		@media print {
+			body {
+				background: none !important;
+				color: #000 !important;
+				display: block !important;
+				height: auto !important;
+				padding: 0 !important;
+			}
+
+			/* 隐藏非证书元素 */
+			.nav-header, .action-bar, .bg-particles, .toast {
+				display: none !important;
+			}
+
+			.cert-wrapper {
+				margin: 0;
+				width: 100%;
+				max-width: none;
+				box-shadow: none;
+			}
+
+			/* 证书卡片打印样式 */
+			.certificate-card {
+				background: #fff !important;
+				color: #000 !important;
+				border: 4px double #333 !important; /* 双线边框 */
+				box-shadow: none !important;
+				backdrop-filter: none !important;
+				transform: none !important;
+				padding: 40px !important;
+				margin: 0;
+				-webkit-print-color-adjust: exact; 
+				print-color-adjust: exact;
+			}
+
+			.certificate-card::after {
+				background: #004d40 !important;
+				height: 2px !important;
+			}
+
+			.org-info h1, .org-info h2, .award-to, .cert-desc {
+				color: #000 !important;
+			}
+			
+			.meta-label { color: #555 !important; }
+			.meta-value { color: #000 !important; font-weight: bold; }
+
+			.cert-title {
+				background: none !important;
+				-webkit-text-fill-color: #004d40 !important;
+				color: #004d40 !important;
+			}
+
+			.recipient-name {
+				color: #000 !important;
+				text-shadow: none !important;
+				border-bottom: 1px solid #000 !important;
+			}
+			
+			.cert-header { border-bottom: 1px solid #ccc !important; }
+			.cert-logo { border-color: #000 !important; }
+			
+			@page {
+				margin: 1cm;
+				size: auto; 
+			}
+		}
+	</style>
+</head>
+<body>
+
+	<div class="bg-particles"></div>
+	<div class="toast" id="toast">已复制内容，请打开微信/QQ粘贴发送</div>
+
+	<!-- 导航 -->
+	<nav class="nav-header">
+		<a href="index.html" class="back-btn">
+			&larr; 返回 / Back
+		</a>
+		<div style="font-size: 0.8rem; color: var(--text-sub); letter-spacing: 1px;">WEPO DATABASE</div>
+	</nav>
+
+	<div class="cert-wrapper">
+		<div class="certificate-card" id="certificate">
+			
+			<div class="cert-header">
+				<div class="org-info">
+					<h1>世界环境保护组织</h1>
+					<h2>World Environmental Protection Organization</h2>
+				</div>
+				<div class="cert-logo">
+					<img src="https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEBGgZoupS08tmL4sCb3NLCDl0z9vLmgQACXCEAAi5q2VU7eyZzJwjEpDYE.jpeg" alt="Logo">
+				</div>
+			</div>
+
+			<div class="cert-body">
+				<div class="award-to">THIS CERTIFICATE IS PRESENTED TO</div>
+				
+				<div class="recipient-name" id="display-name">Loading...</div>
+				
+				<div class="cert-title" id="display-type">荣誉证书</div>
+				
+				<p class="cert-desc" id="display-content">
+					以表彰其在2025年度中对于组织环保和领导工作做出的杰出贡献
+					<br><br>
+					In recognition of his outstanding contribution to the organization's environmental protection and leadership work in 2025
+				</p>
+			</div>
+
+			<div class="cert-footer">
+				<div class="cert-meta">
+					<div class="meta-item">
+						<span class="meta-label">证书编号 / Certificate ID</span>
+						<span class="meta-value" id="display-id">--</span>
+					</div>
+					<div class="meta-item">
+						<span class="meta-label">颁发日期 / Date of Issue</span>
+						<span class="meta-value" id="display-date">--/--/----</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="action-bar">
+		<button class="action-btn" onclick="window.print()">
+			打印证书 / Print
+		</button>
+		<button class="action-btn primary" onclick="shareCert()">
+			分享给好友 / Share
+		</button>
+	</div>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			// 数据填充
+			let certId = '202512220001375889';
+			const pathName = window.location.pathname.split('/').pop().split('.')[0];
+			if (pathName && /^\d{18}$/.test(pathName)) {
+				certId = pathName;
+			}
+
+			const certData = {
+				id: certId,
+				name: "Kang Chaokai/康朝凯 🇨🇳",
+				type: "Certificate of honor",
+				date: "2025-12-22",
+			};
+
+			document.getElementById('display-id').textContent = certData.id;
+			document.getElementById('display-name').textContent = certData.name;
+			document.getElementById('display-type').textContent = certData.type;
+			document.getElementById('display-date').textContent = certData.date;
+		});
+
+		function shareCert() {
+			let currentUrl = window.location.href;
+			let isLocal = currentUrl.startsWith('file:') || currentUrl.includes('content:');
+			
+			const name = document.getElementById('display-name').innerText;
+			const id = document.getElementById('display-id').innerText;
+			
+			let textToCopy = '';
+			
+			if (isLocal) {
+				textToCopy = `【世界环境保护组织】\n我是 ${name}，我刚刚获得了荣誉认证！\n证书编号：${id}\n(请截图分享，链接仅在网站发布后可用)`;
+				showToast("检测到本地文件，已复制文字，请手动截图分享");
+			} else {
+				textToCopy = `【WEPO荣誉认证】\n我是 ${name}，获得世界环境保护组织认证。\n证书编号：${id}\n查看详情：${currentUrl}`;
+				showToast("文案和链接已复制！去微信/QQ粘贴");
+			}
+
+			if (navigator.clipboard) {
+				navigator.clipboard.writeText(textToCopy).catch(err => {
+					alert('复制失败，请手动截图');
+				});
+			} else {
+				const textarea = document.createElement('textarea');
+				textarea.value = textToCopy;
+				document.body.appendChild(textarea);
+				textarea.select();
+				document.execCommand('copy');
+				document.body.removeChild(textarea);
+			}
+		}
+
+		function showToast(msg) {
+			const toast = document.getElementById('toast');
+			toast.innerText = msg;
+			toast.classList.add('show');
+			setTimeout(() => {
+				toast.classList.remove('show');
+			}, 3000);
+		}
+	</script>
+</body>
+</html>
