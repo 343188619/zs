@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>证书查询 | 世界环境保护组织</title>
+	<style>
+		:root {
+			--primary-color: #004d40;
+			--accent-color: #64ffda;
+			--glass-bg: rgba(255, 255, 255, 0.05);
+			--glass-border: rgba(255, 255, 255, 0.1);
+			--text-main: #ffffff;
+			--text-sub: #b2dfdb;
+			--error-color: #ff5252;
+			--font-family: 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+		}
+
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+			outline: none;
+		}
+
+		body {
+			font-family: var(--font-family);
+			background-color: #0f1c1a;
+			background-image: 
+				radial-gradient(at 0% 0%, hsla(153,61%,25%,1) 0, transparent 50%), 
+				radial-gradient(at 100% 100%, hsla(186,64%,20%,1) 0, transparent 50%);
+			height: 100vh;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			overflow: hidden;
+			color: var(--text-main);
+			position: relative;
+		}
+
+		/* 背景动态粒子效果模拟 */
+		body::before {
+			content: '';
+			position: absolute;
+			top: 0; left: 0; width: 100%; height: 100%;
+			background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2364ffda' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+			animation: moveBackground 60s linear infinite;
+			z-index: -1;
+		}
+
+		@keyframes moveBackground {
+			0% { background-position: 0 0; }
+			100% { background-position: 100% 100%; }
+		}
+
+		/* 主容器：玻璃拟态 */
+		.container {
+			width: 90%;
+			max-width: 480px;
+			padding: 3rem 2rem;
+			background: var(--glass-bg);
+			backdrop-filter: blur(20px);
+			-webkit-backdrop-filter: blur(20px);
+			border: 1px solid var(--glass-border);
+			border-radius: 24px;
+			box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+			text-align: center;
+			transform: translateY(20px);
+			opacity: 0;
+			animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+			position: relative;
+			overflow: hidden;
+		}
+
+		/* 顶部装饰光 */
+		.container::after {
+			content: '';
+			position: absolute;
+			top: -50%;
+			left: -50%;
+			width: 200%;
+			height: 200%;
+			background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+			transform: rotate(30deg);
+			pointer-events: none;
+		}
+
+		.logo-wrapper {
+			margin-bottom: 2rem;
+			position: relative;
+			z-index: 2;
+		}
+
+		.logo {
+			width: 100px;
+			height: 100px;
+			border-radius: 50%;
+			object-fit: cover;
+			border: 3px solid rgba(255,255,255,0.2);
+			box-shadow: 0 0 30px rgba(100, 255, 218, 0.2);
+			transition: transform 0.5s ease;
+		}
+
+		.logo:hover {
+			transform: scale(1.05) rotate(5deg);
+		}
+
+		h1 {
+			font-size: 1.6rem;
+			font-weight: 500;
+			letter-spacing: 2px;
+			margin-bottom: 0.5rem;
+			background: linear-gradient(to right, #ffffff, #b2dfdb);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+		}
+
+		h2 {
+			font-size: 0.8rem;
+			text-transform: uppercase;
+			color: var(--text-sub);
+			letter-spacing: 3px;
+			margin-bottom: 3rem;
+			opacity: 0.8;
+			font-weight: 300;
+		}
+
+		/* 输入区域 */
+		.input-group {
+			position: relative;
+			margin-bottom: 2rem;
+			text-align: left;
+		}
+
+		.input-field {
+			width: 100%;
+			background: rgba(0, 0, 0, 0.2);
+			border: none;
+			border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+			padding: 15px 10px;
+			font-size: 1.1rem;
+			color: var(--text-main);
+			font-family: monospace; /* 适合数字显示 */
+			letter-spacing: 2px;
+			transition: all 0.3s ease;
+			border-radius: 8px 8px 0 0;
+		}
+
+		.input-field:focus {
+			background: rgba(0, 0, 0, 0.3);
+			border-bottom-color: var(--accent-color);
+		}
+
+		.input-label {
+			position: absolute;
+			left: 10px;
+			top: 15px;
+			font-size: 1rem;
+			color: rgba(255, 255, 255, 0.5);
+			pointer-events: none;
+			transition: 0.3s ease all;
+		}
+
+		.input-field:focus ~ .input-label,
+		.input-field:valid ~ .input-label {
+			top: -20px;
+			font-size: 0.8rem;
+			color: var(--accent-color);
+			left: 0;
+		}
+
+		.char-counter {
+			position: absolute;
+			right: 0;
+			bottom: -25px;
+			font-size: 0.75rem;
+			color: rgba(255,255,255,0.4);
+			font-family: monospace;
+		}
+
+		/* 查询按钮 */
+		.btn-search {
+			width: 100%;
+			padding: 16px;
+			background: linear-gradient(135deg, var(--primary-color) 0%, #00796b 100%);
+			color: white;
+			border: none;
+			border-radius: 50px;
+			font-size: 1rem;
+			font-weight: 500;
+			letter-spacing: 4px;
+			cursor: pointer;
+			transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+			position: relative;
+			overflow: hidden;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			gap: 10px;
+			box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+		}
+
+		.btn-search:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 15px 30px rgba(100, 255, 218, 0.2);
+		}
+
+		.btn-search:active {
+			transform: translateY(1px);
+		}
+
+		.btn-search span {
+			position: relative;
+			z-index: 2;
+		}
+
+		/* 按钮点击波纹效果 */
+		.btn-search::after {
+			content: '';
+			position: absolute;
+			width: 0;
+			height: 0;
+			background: rgba(255, 255, 255, 0.2);
+			border-radius: 50%;
+			transform: translate(-50%, -50%);
+			left: 50%;
+			top: 50%;
+			transition: width 0.6s ease, height 0.6s ease;
+		}
+
+		.btn-search:active::after {
+			width: 300px;
+			height: 300px;
+		}
+
+		/* 错误提示 Toast */
+		.toast {
+			position: fixed;
+			top: 20px;
+			left: 50%;
+			transform: translateX(-50%) translateY(-100px);
+			background: rgba(255, 82, 82, 0.9);
+			color: white;
+			padding: 12px 24px;
+			border-radius: 30px;
+			font-size: 0.9rem;
+			box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+			opacity: 0;
+			transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+			z-index: 100;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			backdrop-filter: blur(5px);
+		}
+
+		.toast.show {
+			transform: translateX(-50%) translateY(0);
+			opacity: 1;
+		}
+
+		/* 页脚 */
+		footer {
+			position: absolute;
+			bottom: 20px;
+			font-size: 0.7rem;
+			color: rgba(255,255,255,0.3);
+			text-align: center;
+			width: 100%;
+		}
+
+		/* 加载动画 */
+		.loader {
+			width: 20px;
+			height: 20px;
+			border: 2px solid #ffffff;
+			border-bottom-color: transparent;
+			border-radius: 50%;
+			display: none;
+			animation: rotation 1s linear infinite;
+		}
+
+		@keyframes rotation {
+			0% { transform: rotate(0deg); }
+			100% { transform: rotate(360deg); }
+		}
+
+		@keyframes fadeInUp {
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		/* 移动端适配 */
+		@media (max-width: 480px) {
+			.container {
+				width: 95%;
+				padding: 2rem 1.5rem;
+			}
+			h1 { font-size: 1.4rem; }
+			h2 { font-size: 0.7rem; }
+		}
+	</style>
+</head>
+<body>
+
+	<!-- 错误提示组件 -->
+	<div class="toast" id="toast">
+		<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+		<span id="toast-msg">请输入有效的18位证书编号</span>
+	</div>
+
+	<div class="container">
+		<div class="logo-wrapper">
+			<img src="https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEBGgZoupS08tmL4sCb3NLCDl0z9vLmgQACXCEAAi5q2VU7eyZzJwjEpDYE.jpeg" alt="WEPO Logo" class="logo">
+		</div>
+
+		<h1>世界环境保护组织</h1>
+		<h2>World Environmental Protection Organization</h2>
+		
+		<div class="input-group">
+			<!-- maxlength限制输入长度，pattern限制只能输入数字 -->
+			<input type="text" class="input-field" id="cert-id" required pattern="\d*" maxlength="18">
+			<label class="input-label">输入18位证书编号 / Certificate ID</label>
+			<div class="char-counter"><span id="counter">0</span>/18</div>
+		</div>
+
+		<button class="btn-search" id="search-btn">
+			<span>立即查询 SEARCH</span>
+			<div class="loader" id="loader"></div>
+		</button>
+	</div>
+
+	<footer>
+		&copy; 2025 WEPO All Rights Reserved.<br>
+		Designed for a Sustainable Future.
+	</footer>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			const input = document.getElementById('cert-id');
+			const btn = document.getElementById('search-btn');
+			const counter = document.getElementById('counter');
+			const toast = document.getElementById('toast');
+			const toastMsg = document.getElementById('toast-msg');
+			const loader = document.getElementById('loader');
+			const btnText = btn.querySelector('span');
+
+			// 实时输入监听：只允许数字，更新计数器
+			input.addEventListener('input', (e) => {
+				// 移除非数字字符
+				e.target.value = e.target.value.replace(/\D/g, '');
+				
+				// 更新计数
+				const len = e.target.value.length;
+				counter.textContent = len;
+				counter.style.color = len === 18 ? 'var(--accent-color)' : 'rgba(255,255,255,0.4)';
+			});
+
+			// 按钮点击事件
+			btn.addEventListener('click', handleSearch);
+
+			// 回车键监听
+			input.addEventListener('keypress', (e) => {
+				if (e.key === 'Enter') handleSearch();
+			});
+
+			function handleSearch() {
+				const val = input.value;
+
+				// 校验逻辑：必须是18位
+				if (val.length !== 18) {
+					showToast('编号格式错误，请核对18位数字编号');
+					shakeInput();
+					return;
+				}
+
+				// 模拟查询加载状态（增加高级感）
+				startLoading();
+
+				setTimeout(() => {
+					// 跳转逻辑
+					window.location.href = `${val}.html`;
+				}, 1500); // 1.5秒延迟，展示动画
+			}
+
+			function startLoading() {
+				btnText.style.display = 'none';
+				loader.style.display = 'block';
+				btn.style.cursor = 'wait';
+				input.disabled = true;
+			}
+
+			function showToast(message) {
+				toastMsg.innerText = message;
+				toast.classList.add('show');
+				
+				// 3秒后自动消失
+				setTimeout(() => {
+					toast.classList.remove('show');
+				}, 3000);
+			}
+
+			function shakeInput() {
+				const group = document.querySelector('.input-group');
+				group.style.animation = 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both';
+				
+				// 动画结束后移除样式，以便下次触发
+				group.addEventListener('animationend', () => {
+					group.style.animation = '';
+				}, { once: true });
+			}
+		});
+	</script>
+	
+	<style>
+		/* 错误时的抖动动画 */
+		@keyframes shake {
+			10%, 90% { transform: translate3d(-1px, 0, 0); }
+			20%, 80% { transform: translate3d(2px, 0, 0); }
+			30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+			40%, 60% { transform: translate3d(4px, 0, 0); }
+		}
+	</style>
+</body>
+</html>
