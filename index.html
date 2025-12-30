@@ -1,427 +1,436 @@
+
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="light">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>证书查询 | 世界环境保护组织</title>
-	<style>
-		:root {
-			--primary-color: #004d40;
-			--accent-color: #64ffda;
-			--glass-bg: rgba(255, 255, 255, 0.05);
-			--glass-border: rgba(255, 255, 255, 0.1);
-			--text-main: #ffffff;
-			--text-sub: #b2dfdb;
-			--error-color: #ff5252;
-			--font-family: 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-		}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate Verification | WEPO</title>
+    
+    <!-- 引入高级感字体：Playfair Display (标题) 和 Lato (正文) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ================= 核心变量系统 ================= */
+        :root {
+            /* 浅色模式 - 灵感：高级米色艺术纸 / 森林绿 */
+            --bg-color: #F4F4F0;
+            --bg-texture-opacity: 0.4;
+            --text-main: #141414;
+            --text-sub: #585858;
+            --accent-color: #1A3C34; /* 极深的墨绿 */
+            --border-color: #D1D1CE;
+            --input-bg: transparent;
+            --input-text: #1A3C34;
+            --btn-bg: #1A3C34;
+            --btn-text: #FFFFFF;
+            --btn-hover: #2C5E52;
+            --error-bg: #8B0000;
+            --surface: #FFFFFF;
+            
+            --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+            --font-serif: 'Playfair Display', "Songti SC", serif;
+            --font-sans: 'Lato', -apple-system, sans-serif;
+        }
 
-		* {
-			margin: 0;
-			padding: 0;
-			box-sizing: border-box;
-			outline: none;
-		}
+        [data-theme="dark"] {
+            /* 深色模式 - 灵感：黑曜石 / 哑光金 */
+            --bg-color: #121212;
+            --bg-texture-opacity: 0.15;
+            --text-main: #EFEFEF;
+            --text-sub: #888888;
+            --accent-color: #C8AA86; /* 哑光香槟金 */
+            --border-color: #333333;
+            --input-bg: transparent;
+            --input-text: #FFFFFF;
+            --btn-bg: #C8AA86;
+            --btn-text: #121212;
+            --btn-hover: #E3C8A6;
+            --error-bg: #CF6679;
+            --surface: #1E1E1E;
+        }
 
-		body {
-			font-family: var(--font-family);
-			background-color: #0f1c1a;
-			background-image: 
-				radial-gradient(at 0% 0%, hsla(153,61%,25%,1) 0, transparent 50%), 
-				radial-gradient(at 100% 100%, hsla(186,64%,20%,1) 0, transparent 50%);
-			height: 100vh;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			overflow: hidden;
-			color: var(--text-main);
-			position: relative;
-		}
+        /* ================= 基础重置 ================= */
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+        
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.8s var(--ease-out-expo), color 0.8s ease;
+            position: relative;
+            overflow: hidden;
+        }
 
-		/* 背景动态粒子效果模拟 */
-		body::before {
-			content: '';
-			position: absolute;
-			top: 0; left: 0; width: 100%; height: 100%;
-			background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2364ffda' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-			animation: moveBackground 60s linear infinite;
-			z-index: -1;
-		}
+        /* 胶片噪点纹理 - 增加高级质感 */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.5'/%3E%3C/svg%3E");
+            opacity: var(--bg-texture-opacity);
+            pointer-events: none;
+            z-index: 0;
+            mix-blend-mode: overlay;
+        }
 
-		@keyframes moveBackground {
-			0% { background-position: 0 0; }
-			100% { background-position: 100% 100%; }
-		}
+        /* ================= 布局 ================= */
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: 40px;
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-		/* 主容器：玻璃拟态 */
-		.container {
-			width: 90%;
-			max-width: 480px;
-			padding: 3rem 2rem;
-			background: var(--glass-bg);
-			backdrop-filter: blur(20px);
-			-webkit-backdrop-filter: blur(20px);
-			border: 1px solid var(--glass-border);
-			border-radius: 24px;
-			box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-			text-align: center;
-			transform: translateY(20px);
-			opacity: 0;
-			animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-			position: relative;
-			overflow: hidden;
-		}
+        /* 主题切换器 - 极简文字按钮 */
+        .theme-switch {
+            position: absolute;
+            top: 40px;
+            right: 40px;
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--text-sub);
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 50;
+            opacity: 0.6;
+            transition: opacity 0.3s;
+            font-family: var(--font-sans);
+        }
+        .theme-switch:hover { opacity: 1; }
 
-		/* 顶部装饰光 */
-		.container::after {
-			content: '';
-			position: absolute;
-			top: -50%;
-			left: -50%;
-			width: 200%;
-			height: 200%;
-			background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
-			transform: rotate(30deg);
-			pointer-events: none;
-		}
+        /* Logo 区域 */
+        .brand-section {
+            margin-bottom: 60px;
+            text-align: center;
+            opacity: 0;
+            animation: fadeIn 1.2s var(--ease-out-expo) forwards;
+        }
 
-		.logo-wrapper {
-			margin-bottom: 2rem;
-			position: relative;
-			z-index: 2;
-		}
+        .logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%; /* 圆形 */
+            object-fit: cover;
+            margin-bottom: 24px;
+            /* 黑白滤镜让图片更协调，hover时恢复色彩 */
+            filter: grayscale(100%);
+            transition: filter 0.6s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        
+        .logo:hover { filter: grayscale(0%); }
 
-		.logo {
-			width: 100px;
-			height: 100px;
-			border-radius: 50%;
-			object-fit: cover;
-			border: 3px solid rgba(255,255,255,0.2);
-			box-shadow: 0 0 30px rgba(100, 255, 218, 0.2);
-			transition: transform 0.5s ease;
-		}
+        h1 {
+            font-family: var(--font-serif);
+            font-size: 2.5rem;
+            font-weight: 400;
+            line-height: 1.2;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
 
-		.logo:hover {
-			transform: scale(1.05) rotate(5deg);
-		}
+        .subtitle {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 400;
+        }
 
-		h1 {
-			font-size: 1.6rem;
-			font-weight: 500;
-			letter-spacing: 2px;
-			margin-bottom: 0.5rem;
-			background: linear-gradient(to right, #ffffff, #b2dfdb);
-			-webkit-background-clip: text;
-			-webkit-text-fill-color: transparent;
-		}
+        /* ================= 输入区域 ================= */
+        .input-group {
+            width: 100%;
+            margin-bottom: 50px;
+            position: relative;
+            opacity: 0;
+            animation: fadeIn 1.2s var(--ease-out-expo) 0.2s forwards;
+        }
 
-		h2 {
-			font-size: 0.8rem;
-			text-transform: uppercase;
-			color: var(--text-sub);
-			letter-spacing: 3px;
-			margin-bottom: 3rem;
-			opacity: 0.8;
-			font-weight: 300;
-		}
+        /* 极简下划线风格输入框 */
+        .input-field {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--border-color);
+            padding: 15px 0;
+            font-family: var(--font-serif);
+            font-size: 1.8rem;
+            color: var(--input-text);
+            text-align: center;
+            border-radius: 0; /* 移除iOS圆角 */
+            transition: border-color 0.4s ease;
+            letter-spacing: 4px;
+        }
 
-		/* 输入区域 */
-		.input-group {
-			position: relative;
-			margin-bottom: 2rem;
-			text-align: left;
-		}
+        .input-field::placeholder {
+            color: var(--border-color);
+            font-size: 1.5rem;
+            font-family: var(--font-sans);
+            letter-spacing: 1px;
+            opacity: 0.5;
+        }
 
-		.input-field {
-			width: 100%;
-			background: rgba(0, 0, 0, 0.2);
-			border: none;
-			border-bottom: 2px solid rgba(255, 255, 255, 0.2);
-			padding: 15px 10px;
-			font-size: 1.1rem;
-			color: var(--text-main);
-			font-family: monospace; /* 适合数字显示 */
-			letter-spacing: 2px;
-			transition: all 0.3s ease;
-			border-radius: 8px 8px 0 0;
-		}
+        .input-field:focus {
+            border-bottom-color: var(--accent-color);
+        }
 
-		.input-field:focus {
-			background: rgba(0, 0, 0, 0.3);
-			border-bottom-color: var(--accent-color);
-		}
+        /* 提示信息 - 图文结合 */
+        .hint-wrapper {
+            margin-top: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            color: var(--text-sub);
+        }
 
-		.input-label {
-			position: absolute;
-			left: 10px;
-			top: 15px;
-			font-size: 1rem;
-			color: rgba(255, 255, 255, 0.5);
-			pointer-events: none;
-			transition: 0.3s ease all;
-		}
+        .cert-icon {
+            width: 24px;
+            height: 32px;
+            border: 1px solid currentColor;
+            position: relative;
+            opacity: 0.6;
+        }
+        
+        /* 模拟证书上的 NO. 位置 */
+        .cert-icon::after {
+            content: "";
+            position: absolute;
+            bottom: 4px;
+            left: 4px;
+            width: 12px;
+            height: 1px;
+            background-color: var(--accent-color);
+        }
 
-		.input-field:focus ~ .input-label,
-		.input-field:valid ~ .input-label {
-			top: -20px;
-			font-size: 0.8rem;
-			color: var(--accent-color);
-			left: 0;
-		}
+        .hint-text {
+            font-size: 0.75rem;
+            line-height: 1.5;
+            text-align: left;
+        }
+        .hint-text strong {
+            color: var(--accent-color);
+            font-weight: 700;
+        }
 
-		.char-counter {
-			position: absolute;
-			right: 0;
-			bottom: -25px;
-			font-size: 0.75rem;
-			color: rgba(255,255,255,0.4);
-			font-family: monospace;
-		}
+        /* ================= 按钮 ================= */
+        .btn-search {
+            background-color: var(--btn-bg);
+            color: var(--btn-text);
+            border: none;
+            padding: 18px 40px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            width: 100%;
+            max-width: 280px;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            animation: fadeIn 1.2s var(--ease-out-expo) 0.4s forwards;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-		/* 查询按钮 */
-		.btn-search {
-			width: 100%;
-			padding: 16px;
-			background: linear-gradient(135deg, var(--primary-color) 0%, #00796b 100%);
-			color: white;
-			border: none;
-			border-radius: 50px;
-			font-size: 1rem;
-			font-weight: 500;
-			letter-spacing: 4px;
-			cursor: pointer;
-			transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-			position: relative;
-			overflow: hidden;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			gap: 10px;
-			box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-		}
+        .btn-search:hover {
+            background-color: var(--btn-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.15);
+        }
 
-		.btn-search:hover {
-			transform: translateY(-2px);
-			box-shadow: 0 15px 30px rgba(100, 255, 218, 0.2);
-		}
+        .btn-search span {
+            position: relative;
+            z-index: 2;
+        }
 
-		.btn-search:active {
-			transform: translateY(1px);
-		}
+        /* 按钮内的加载线条 */
+        .loader-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 2px;
+            background: rgba(255,255,255,0.5);
+            width: 0%;
+            transition: width 0.2s;
+        }
+        
+        [data-theme="dark"] .loader-line { background: rgba(0,0,0,0.3); }
 
-		.btn-search span {
-			position: relative;
-			z-index: 2;
-		}
+        .btn-search.loading .loader-line {
+            width: 100%;
+            transition: width 1.5s linear;
+        }
+        
+        .btn-search.loading {
+            pointer-events: none;
+            opacity: 0.9;
+        }
 
-		/* 按钮点击波纹效果 */
-		.btn-search::after {
-			content: '';
-			position: absolute;
-			width: 0;
-			height: 0;
-			background: rgba(255, 255, 255, 0.2);
-			border-radius: 50%;
-			transform: translate(-50%, -50%);
-			left: 50%;
-			top: 50%;
-			transition: width 0.6s ease, height 0.6s ease;
-		}
+        /* ================= 底部版权 ================= */
+        footer {
+            position: absolute;
+            bottom: 30px;
+            font-size: 0.7rem;
+            color: var(--text-sub);
+            opacity: 0.5;
+            text-align: center;
+            letter-spacing: 0.5px;
+            z-index: 10;
+        }
 
-		.btn-search:active::after {
-			width: 300px;
-			height: 300px;
-		}
+        /* ================= 错误提示 Toast ================= */
+        .toast {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            background-color: var(--error-bg);
+            color: white;
+            text-align: center;
+            font-size: 0.9rem;
+            transform: translateY(-100%);
+            transition: transform 0.5s var(--ease-out-expo);
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .toast.show { transform: translateY(0); }
 
-		/* 错误提示 Toast */
-		.toast {
-			position: fixed;
-			top: 20px;
-			left: 50%;
-			transform: translateX(-50%) translateY(-100px);
-			background: rgba(255, 82, 82, 0.9);
-			color: white;
-			padding: 12px 24px;
-			border-radius: 30px;
-			font-size: 0.9rem;
-			box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-			opacity: 0;
-			transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-			z-index: 100;
-			display: flex;
-			align-items: center;
-			gap: 8px;
-			backdrop-filter: blur(5px);
-		}
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-		.toast.show {
-			transform: translateX(-50%) translateY(0);
-			opacity: 1;
-		}
-
-		/* 页脚 */
-		footer {
-			position: absolute;
-			bottom: 20px;
-			font-size: 0.7rem;
-			color: rgba(255,255,255,0.3);
-			text-align: center;
-			width: 100%;
-		}
-
-		/* 加载动画 */
-		.loader {
-			width: 20px;
-			height: 20px;
-			border: 2px solid #ffffff;
-			border-bottom-color: transparent;
-			border-radius: 50%;
-			display: none;
-			animation: rotation 1s linear infinite;
-		}
-
-		@keyframes rotation {
-			0% { transform: rotate(0deg); }
-			100% { transform: rotate(360deg); }
-		}
-
-		@keyframes fadeInUp {
-			to {
-				opacity: 1;
-				transform: translateY(0);
-			}
-		}
-
-		/* 移动端适配 */
-		@media (max-width: 480px) {
-			.container {
-				width: 95%;
-				padding: 2rem 1.5rem;
-			}
-			h1 { font-size: 1.4rem; }
-			h2 { font-size: 0.7rem; }
-		}
-	</style>
+        /* 移动端适配 */
+        @media (max-width: 480px) {
+            h1 { font-size: 2rem; }
+            .input-field { font-size: 1.5rem; }
+            .container { padding: 30px 20px; }
+            .theme-switch { top: 20px; right: 20px; }
+        }
+    </style>
 </head>
 <body>
 
-	<!-- 错误提示组件 -->
-	<div class="toast" id="toast">
-		<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-		<span id="toast-msg">请输入有效的18位证书编号</span>
-	</div>
+    <!-- 极简主题切换 -->
+    <button class="theme-switch" id="theme-btn">Dark Mode</button>
 
-	<div class="container">
-		<div class="logo-wrapper">
-			<img src="https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEBGgZoupS08tmL4sCb3NLCDl0z9vLmgQACXCEAAi5q2VU7eyZzJwjEpDYE.jpeg" alt="WEPO Logo" class="logo">
-		</div>
+    <!-- 顶部错误提示条 -->
+    <div class="toast" id="toast">
+        <span id="toast-msg">Invalid Certificate ID</span>
+    </div>
 
-		<h1>世界环境保护组织</h1>
-		<h2>World Environmental Protection Organization</h2>
-		
-		<div class="input-group">
-			<!-- maxlength限制输入长度，pattern限制只能输入数字 -->
-			<input type="text" class="input-field" id="cert-id" required pattern="\d*" maxlength="18">
-			<label class="input-label">输入18位证书编号 / Certificate ID</label>
-			<div class="char-counter"><span id="counter">0</span>/18</div>
-		</div>
+    <div class="container">
+        <!-- 品牌区 -->
+        <div class="brand-section">
+            <img src="https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEBGgZoupS08tmL4sCb3NLCDl0z9vLmgQACXCEAAi5q2VU7eyZzJwjEpDYE.jpeg" alt="WEPO" class="logo">
+            <h1>Certificate Search</h1>
+            <div class="subtitle">世界环境保护组织 · 证书查询系统</div>
+        </div>
 
-		<button class="btn-search" id="search-btn">
-			<span>立即查询 SEARCH</span>
-			<div class="loader" id="loader"></div>
-		</button>
-	</div>
+        <!-- 输入区 -->
+        <div class="input-group">
+            <input type="text" class="input-field" id="cert-id" placeholder="NO. XXXXXXXX" maxlength="18" autocomplete="off">
+            
+            <!-- 高级感提示指引 -->
+            <div class="hint-wrapper">
+                <div class="cert-icon"></div>
+                <div class="hint-text">
+                    Locate the code after <strong>"NO."</strong><br>
+                    请输入证书底部 NO. 后的数字编码
+                </div>
+            </div>
+        </div>
 
-	<footer>
-		&copy; 2025 WEPO All Rights Reserved.<br>
-		Designed for a Sustainable Future.
-	</footer>
+        <!-- 按钮 -->
+        <button class="btn-search" id="search-btn">
+            <span>Verify Credential / 立即查询</span>
+            <div class="loader-line"></div>
+        </button>
+    </div>
 
-	<script>
-		document.addEventListener('DOMContentLoaded', () => {
-			const input = document.getElementById('cert-id');
-			const btn = document.getElementById('search-btn');
-			const counter = document.getElementById('counter');
-			const toast = document.getElementById('toast');
-			const toastMsg = document.getElementById('toast-msg');
-			const loader = document.getElementById('loader');
-			const btnText = btn.querySelector('span');
+    <footer>
+        &copy; 2025 World Environmental Protection Organization
+    </footer>
 
-			// 实时输入监听：只允许数字，更新计数器
-			input.addEventListener('input', (e) => {
-				// 移除非数字字符
-				e.target.value = e.target.value.replace(/\D/g, '');
-				
-				// 更新计数
-				const len = e.target.value.length;
-				counter.textContent = len;
-				counter.style.color = len === 18 ? 'var(--accent-color)' : 'rgba(255,255,255,0.4)';
-			});
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeBtn = document.getElementById('theme-btn');
+            const html = document.documentElement;
+            const input = document.getElementById('cert-id');
+            const btn = document.getElementById('search-btn');
+            const toast = document.getElementById('toast');
+            
+            // 1. Theme Logic
+            function toggleTheme() {
+                const current = html.getAttribute('data-theme');
+                const next = current === 'light' ? 'dark' : 'light';
+                html.setAttribute('data-theme', next);
+                themeBtn.textContent = next === 'light' ? 'Dark Mode' : 'Light Mode';
+            }
+            themeBtn.addEventListener('click', toggleTheme);
 
-			// 按钮点击事件
-			btn.addEventListener('click', handleSearch);
+            // 2. Input Formatting
+            input.addEventListener('input', (e) => {
+                // 只允许数字
+                e.target.value = e.target.value.replace(/\D/g, '');
+            });
 
-			// 回车键监听
-			input.addEventListener('keypress', (e) => {
-				if (e.key === 'Enter') handleSearch();
-			});
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') startSearch();
+            });
 
-			function handleSearch() {
-				const val = input.value;
+            btn.addEventListener('click', startSearch);
 
-				// 校验逻辑：必须是18位
-				if (val.length !== 18) {
-					showToast('编号格式错误，请核对18位数字编号');
-					shakeInput();
-					return;
-				}
+            // 3. Search Logic
+            function startSearch() {
+                const val = input.value.trim();
+                
+                if (val.length !== 18) {
+                    showToast('Please enter a valid 18-digit code / 请输入18位有效编号');
+                    return;
+                }
 
-				// 模拟查询加载状态（增加高级感）
-				startLoading();
+                // Animation
+                btn.classList.add('loading');
+                const span = btn.querySelector('span');
+                const originalText = span.textContent;
+                span.textContent = 'Verifying... / 正在校验...';
 
-				setTimeout(() => {
-					// 跳转逻辑
-					window.location.href = `${val}.html`;
-				}, 1500); // 1.5秒延迟，展示动画
-			}
+                setTimeout(() => {
+                    window.location.href = `${val}.html`;
+                }, 1500);
+            }
 
-			function startLoading() {
-				btnText.style.display = 'none';
-				loader.style.display = 'block';
-				btn.style.cursor = 'wait';
-				input.disabled = true;
-			}
-
-			function showToast(message) {
-				toastMsg.innerText = message;
-				toast.classList.add('show');
-				
-				// 3秒后自动消失
-				setTimeout(() => {
-					toast.classList.remove('show');
-				}, 3000);
-			}
-
-			function shakeInput() {
-				const group = document.querySelector('.input-group');
-				group.style.animation = 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both';
-				
-				// 动画结束后移除样式，以便下次触发
-				group.addEventListener('animationend', () => {
-					group.style.animation = '';
-				}, { once: true });
-			}
-		});
-	</script>
-	
-	<style>
-		/* 错误时的抖动动画 */
-		@keyframes shake {
-			10%, 90% { transform: translate3d(-1px, 0, 0); }
-			20%, 80% { transform: translate3d(2px, 0, 0); }
-			30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-			40%, 60% { transform: translate3d(4px, 0, 0); }
-		}
-	</style>
+            function showToast(msg) {
+                const msgEl = document.getElementById('toast-msg');
+                msgEl.textContent = msg;
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
+        });
+    </script>
 </body>
 </html>
